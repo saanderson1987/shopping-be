@@ -1,8 +1,10 @@
 import { ApolloServer } from "apollo-server";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
-
+import { context } from "./context";
 import { schema } from "./schema";
+
 export const server = new ApolloServer({
+  context,
   plugins: [
     // ApolloServerPluginLandingPageGraphQLPlayground() // use this for offline playground use
   ],
