@@ -31,8 +31,22 @@ export const LinkQuery = extendType({
   type: "Query",
   definition(t) {
     t.nonNull.list.nonNull.field("feed", {
+      args: {
+        filter: stringArg(),
+      },
       type: "Link",
-      resolve: (parent, args, context, info) => context.prisma.link.findMany(),
+      resolve: (parent, args, context, info) => {
+        const where = args.filter
+          ? {
+              OR: [
+                { description: { contains: args.filter } },
+                { url: { contains: args.filter } },
+              ],
+            }
+          : {};
+
+        return context.prisma.link.findMany({ where });
+      },
     });
   },
 });
