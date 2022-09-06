@@ -1,4 +1,15 @@
-import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
+import {
+  arg,
+  enumType,
+  extendType,
+  inputObjectType,
+  intArg,
+  list,
+  nonNull,
+  objectType,
+  stringArg,
+} from "nexus";
+import { Prisma } from "@prisma/client";
 
 export const Link = objectType({
   name: "Link",
@@ -32,6 +43,7 @@ export const LinkQuery = extendType({
     t.nonNull.list.nonNull.field("feed", {
       args: {
         filter: stringArg(),
+        orderBy: arg({ type: list(nonNull(LinkOrderByInput)) }), // 1
         skip: intArg(),
         take: intArg(),
       },
@@ -50,10 +62,27 @@ export const LinkQuery = extendType({
           where,
           skip: args?.skip as number | undefined, // 2
           take: args?.take as number | undefined,
+          orderBy: args?.orderBy as
+            | Prisma.Enumerable<Prisma.LinkOrderByWithRelationInput>
+            | undefined,
         });
       },
     });
   },
+});
+
+export const LinkOrderByInput = inputObjectType({
+  name: "LinkOrderByInput",
+  definition(t) {
+    t.field("description", { type: Sort });
+    t.field("url", { type: Sort });
+    t.field("createdAt", { type: Sort });
+  },
+});
+
+export const Sort = enumType({
+  name: "Sort",
+  members: ["asc", "desc"],
 });
 
 export const LinkMutation = extendType({
