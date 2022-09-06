@@ -2,6 +2,7 @@ import { ApolloServer } from "apollo-server";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { context } from "./context";
 import { schema } from "./schema";
+require("dotenv").config();
 
 export const server = new ApolloServer({
   context,
