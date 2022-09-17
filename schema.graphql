@@ -7,6 +7,12 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+input LinkOrderByInput {
+  createdAt: Sort
+  description: Sort
+  url: Sort
+}
+
 type Neighborhood {
   id: Int!
   name: String!
@@ -14,11 +20,22 @@ type Neighborhood {
 }
 
 type Query {
-  ok: Boolean!
+  stores(filter: String, orderBy: [LinkOrderByInput!], skip: Int, take: Int): StoresQueryResponse!
+}
+
+enum Sort {
+  asc
+  desc
 }
 
 type Store {
   id: Int!
   name: String!
   neighborhood: Neighborhood
+}
+
+type StoresQueryResponse {
+  count: Int!
+  id: ID
+  stores: [Store!]!
 }

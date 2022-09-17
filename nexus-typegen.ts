@@ -29,9 +29,15 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  LinkOrderByInput: { // input type
+    createdAt?: NexusGenEnums['Sort'] | null; // Sort
+    description?: NexusGenEnums['Sort'] | null; // Sort
+    url?: NexusGenEnums['Sort'] | null; // Sort
+  }
 }
 
 export interface NexusGenEnums {
+  Sort: "asc" | "desc"
 }
 
 export interface NexusGenScalars {
@@ -53,6 +59,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   }
+  StoresQueryResponse: { // root type
+    count: number; // Int!
+    id?: string | null; // ID
+    stores: NexusGenRootTypes['Store'][]; // [Store!]!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -63,7 +74,7 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
   Neighborhood: { // field return type
@@ -72,12 +83,17 @@ export interface NexusGenFieldTypes {
     stores: NexusGenRootTypes['Store'][]; // [Store!]!
   }
   Query: { // field return type
-    ok: boolean; // Boolean!
+    stores: NexusGenRootTypes['StoresQueryResponse']; // StoresQueryResponse!
   }
   Store: { // field return type
     id: number; // Int!
     name: string; // String!
     neighborhood: NexusGenRootTypes['Neighborhood'] | null; // Neighborhood
+  }
+  StoresQueryResponse: { // field return type
+    count: number; // Int!
+    id: string | null; // ID
+    stores: NexusGenRootTypes['Store'][]; // [Store!]!
   }
 }
 
@@ -88,16 +104,29 @@ export interface NexusGenFieldTypeNames {
     stores: 'Store'
   }
   Query: { // field return type name
-    ok: 'Boolean'
+    stores: 'StoresQueryResponse'
   }
   Store: { // field return type name
     id: 'Int'
     name: 'String'
     neighborhood: 'Neighborhood'
   }
+  StoresQueryResponse: { // field return type name
+    count: 'Int'
+    id: 'ID'
+    stores: 'Store'
+  }
 }
 
 export interface NexusGenArgTypes {
+  Query: {
+    stores: { // args
+      filter?: string | null; // String
+      orderBy?: NexusGenInputs['LinkOrderByInput'][] | null; // [LinkOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {
@@ -108,9 +137,9 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 
