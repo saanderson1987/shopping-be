@@ -1,46 +1,43 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+const createStoresForNeighborhood = (neighborhoodId: number) =>
+  prisma.store.createMany({
+    data: new Array(4).fill(1).map((_, idx) => ({
+      name: `store_${idx}`,
+      neighborhoodId,
+    })),
+  });
+
 async function main() {
-  const alice = await prisma.user.upsert({
-    where: { email: "alice@prisma.io" },
+  const soho = await prisma.neighborhood.upsert({
+    where: { name: "Soho" },
     update: {},
     create: {
-      email: "alice@prisma.io",
-      name: "Alice",
-      posts: {
-        create: {
-          title: "Check out Prisma with Next.js",
-          content: "https://www.prisma.io/nextjs",
-          published: true,
-        },
-      },
+      name: "Soho",
     },
   });
 
-  const bob = await prisma.user.upsert({
-    where: { email: "bob@prisma.io" },
+  const midtown5thAve = await prisma.neighborhood.upsert({
+    where: { name: "Midtown - 5th Ave" },
     update: {},
     create: {
-      email: "bob@prisma.io",
-      name: "Bob",
-      posts: {
-        create: [
-          {
-            title: "Follow Prisma on Twitter",
-            content: "https://twitter.com/prisma",
-            published: true,
-          },
-          {
-            title: "Follow Nexus on Twitter",
-            content: "https://twitter.com/nexusgql",
-            published: true,
-          },
-        ],
-      },
+      name: "Midtown - 5th Ave",
     },
   });
-  console.log({ alice, bob });
+
+  const stores = await Promise.all([
+    createStoresForNeighborhood(soho.id),
+    createStoresForNeighborhood(midtown5thAve.id),
+  ]);
+
+  console.log(
+    JSON.stringify({
+      soho,
+      midtown5thAve,
+      stores,
+    })
+  );
 }
 
 main()

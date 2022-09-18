@@ -31,13 +31,15 @@ model User {
 
 model Neighborhood {
   id     Int     @id @default(autoincrement())
-  name   String
+  name   String  @unique
   stores Store[]
 }
 
 model Store {
   id             Int           @id @default(autoincrement())
-  name           String
+  name           String        
   neighborhood   Neighborhood? @relation(fields: [neighborhoodId], references: [id])
   neighborhoodId Int?
+
+  @@unique([neighborhoodId, name])
 }

@@ -3,8 +3,19 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const allLinks = await prisma.link.findMany();
-  console.log(allLinks);
+  const neighborhoods = await prisma.neighborhood.findMany();
+  const stores = await prisma.store.findMany();
+
+  console.log(
+    JSON.stringify(
+      {
+        neighborhoods,
+        stores,
+      },
+      null,
+      2
+    )
+  );
 }
 
 main()
